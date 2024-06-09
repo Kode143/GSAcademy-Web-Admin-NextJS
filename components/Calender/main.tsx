@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Calendar from './components/Calendar';
+import Calendar from './CalenderComponents/Calendar';
+
 
 class Main extends React.Component {
   render() {

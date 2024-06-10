@@ -1,8 +1,9 @@
 import Layout from '@/components/Layout';
 import React from 'react';
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
-const settings = () => {
+const Settings = () => {
   const { data: session } = useSession();
 
   const capitalizeWords = (name) => {
@@ -27,13 +28,21 @@ const settings = () => {
             <h3>Email: <b>{session?.user.email}</b></h3>
           </div>
 
-          <div className="rounded-lg overflow-hidden">
-            <img src={session?.user?.image} alt="User Image" className="w-24 h-24"/>
-          </div>
+          {session?.user?.image && (
+            <div className="rounded-lg overflow-hidden">
+              <Image 
+                src={session.user.image} 
+                alt="User Image" 
+                height={100} 
+                width={100} 
+                className="object-cover"
+              />
+            </div>
+          )}
         </div>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default settings;
+export default Settings;

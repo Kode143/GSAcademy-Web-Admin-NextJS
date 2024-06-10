@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { ReactSortable } from 'react-sortablejs';
 import Spinner from '../Spinner';
 import { UploadIcon } from '../Icons';
+import Image from 'next/image';
 
 const SliderForm = () => {
 
@@ -84,7 +85,7 @@ async function createEvent(ev){
       <>
       <button onClick={openModal}
         className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-900"
-      >Add Event</button>
+      >Add Slider</button>
 {modalOpen && (
          <form  onSubmit={createEvent}
           className="fixed inset-0 flex items-center justify-center z-50 ">
@@ -106,7 +107,7 @@ async function createEvent(ev){
             <div className='mb-2 flex flex-wrap gap-1'>
             {!!images?.length && images.map((image, index) => (
   <div key={index} className='w-20 h-20 flex justify-center items-center bg-gray-400 rounded-lg hover:bg-gray-700 mr-2 mb-2'>
-    <img src={image.secure_url} alt={`Image ${index}`} className='w-full h-full object-cover' />
+    <Image src={image.secure_url} alt={`Image ${index}`} height={100} width={300} className='w-full h-full object-cover' />
   </div>
 ))}
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Calendar from './CalenderComponents/Calendar';
-
 
 class Main extends React.Component {
   render() {
@@ -11,7 +10,8 @@ class Main extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Main />,
-  document.getElementById('gallery-root')
-);
+const rootElement = document.getElementById('gallery-root');
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<Main />);
+}

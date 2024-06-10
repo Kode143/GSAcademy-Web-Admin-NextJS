@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import EventForm from '@/components/AddForms/EventForm';
 import DeleteEvent from '@/components/DeleteModals/DeleteEvent'; // Import the DeleteEvent component
 import axios from 'axios';
+import Image from 'next/image';
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -43,8 +44,9 @@ const Events = () => {
     <h3 className="text-lg font-semibold mb-2 text-center">{event.title}</h3>
     <div className="image-container ">
       {event.images.map((image, imageIndex) => (
-        <img key={imageIndex} src={image.secure_url} alt={`Event ${index} Image ${imageIndex}`}
-         style={{ width: '100%', height: 'auto', marginBottom: '8px' }} />
+        <Image key={imageIndex} src={image.secure_url} alt={`Event ${index} Image ${imageIndex}`}
+        width={600} height={200}
+         style={{  marginBottom: '8px' }} />
       ))}
     </div>
     <div className="description-container overflow-hidden w-full mt-3" style={{ maxHeight: expandedStates[index] ? 'none' : '50px' }}> 

@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Dashboard from "../components/Dashboard";
 import { mongooseConnect } from '@/lib/mongoose';
 import { Contact } from '@/models/contact';
+import Image from "next/image";
 
 export default function Home({contactFormData}) {
   const{data: session} = useSession();
@@ -21,11 +22,19 @@ export default function Home({contactFormData}) {
   Welcome,<b>{session?.user?.name ? capitalizeWords(session.user.name) : ''}</b>
   </h1>
   <div className="bg-gray-700 flex text-white gap-1 rounded-lg overflow-hidden">
-    <img src={session?.user?.image} alt="/" className="w-10 h-10"/>
-    <span className="py-1 px-2">
-    {session?.user?.name ? capitalizeWords(session.user.name) : ''}
-    </span>
-  </div>
+      {session?.user?.image && (
+        <Image 
+          src={session.user.image} 
+          alt="User Image" 
+          height={40} 
+          width={40} 
+          className="object-cover"
+        />
+      )}
+      <span className="py-1 px-2">
+        {session?.user?.name ? capitalizeWords(session.user.name) : ''}
+      </span>
+    </div>
   </div>
  <div>
   <Dashboard  contactFormData={contactFormData}/>

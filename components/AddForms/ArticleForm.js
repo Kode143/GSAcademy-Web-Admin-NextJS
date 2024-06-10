@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Spinner from '../Spinner';
 import { UploadIcon } from '../Icons';
+import Image from 'next/image';
 
 let ReactQuill;
 if (typeof window !== 'undefined') {
@@ -25,6 +26,7 @@ const ArticleForm = ({
   const [publishedDate, setPublishedDate] = useState(new Date());
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+  const quillRef = useRef(null); // Create a ref for ReactQuill
 
   useEffect(() => {
     setTitle(existingTitle || '');
@@ -67,8 +69,7 @@ const ArticleForm = ({
       secure_url: image.secure_url,
       public_id: image.public_id
     }));
-    const data = { title, images: formattedImages, description,  publisher,
-    publishedDate, };
+    const data = { title, images: formattedImages, description,  publisher, publishedDate };
     if (_id) {
       await axios.put('/api/articles', { ...data, _id });
     } else {
@@ -86,8 +87,8 @@ const ArticleForm = ({
     setTitle(capitalizeFirstLetter(e.target.value));
   };
 
-  const HandlePublisher = (e) => {
-    setPublisher(capitalizeFirstLetter(e.target.value))
+  const handlePublisher = (e) => {
+    setPublisher(capitalizeFirstLetter(e.target.value));
   };
 
   return (
@@ -108,17 +109,17 @@ const ArticleForm = ({
             placeholder="Title here..."
             value={title}
             onChange={handleFirstLetter}
-            className="ps-3 "
+            className="ps-3"
             required
           />
 
-<label>Publisher</label>
+          <label>Publisher</label>
           <input
             type="text"
             placeholder="Publisher name..."
             value={publisher}
-            onChange={HandlePublisher}
-            className="ps-3 "
+            onChange={handlePublisher}
+            className="ps-3"
             required
           />
 
@@ -126,7 +127,7 @@ const ArticleForm = ({
           <div className="mb-2 flex flex-wrap gap-1">
             {!!images?.length && images.map((image, index) => (
               <div key={index} className="relative w-20 h-20 flex justify-center items-center bg-gray-400 rounded-lg hover:bg-gray-700 mr-2 mb-2">
-                <img src={image.secure_url} alt={`Image ${index}`} className="w-full h-full object-cover" />
+                <Image src={image.secure_url} alt={`Image ${index}`} className="w-full h-full object-cover" height={100} width={300} />
                 <button
                   type="button"
                   onClick={() => removeImage(index)}
@@ -149,6 +150,7 @@ const ArticleForm = ({
           <label>Text Body</label>
           {ReactQuill ? (
             <ReactQuill
+              ref={quillRef} // Attach the ref to ReactQuill
               value={description}
               onChange={setDescription}
               modules={{

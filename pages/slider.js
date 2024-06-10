@@ -4,6 +4,7 @@ import axios from 'axios';
 import SliderForm from '@/components/AddForms/SliderForm';
 import DeleteSlider from '@/components/DeleteModals/DeleteSliders';
 import ImagePreviewModal from '@/components/ImagePreviewModal';
+import Image from 'next/image';
 
 const SliderPage = () => {
   const [sliders, setSliders] = useState([]);
@@ -30,43 +31,47 @@ const SliderPage = () => {
     setSelectedImage(null);
   };
 
-
-
   return (
     <Layout>
       <div className='ms-2'> 
-      <div className="container mx-auto">
-        <h1 className="mt-8 mb-4">
-          <SliderForm fetchSliders={fetchSliders} />
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-          {sliders.map((slider, index) => (
-            <div key={index} className="relative">
-              <div className="bg-gray-100 rounded-md overflow-hidden shadow-md">
-                <img src={slider.images[0].secure_url}
-                 alt={`Slider ${index}`}
-                 onClick={() => openImagePreview(slider.images[0].secure_url)}
-                  className="w-full h-48 object-cover hover:cursor-pointer hover:scale-105" />
-                <div className="p-4">
-                  <h2 className="text-2xl font-bold mb-2">{slider.title}</h2>
-                  <p className="text-gray-600">{slider.description}</p>
+        <div className="container mx-auto">
+          <h1 className="mt-8 mb-4">
+            <SliderForm fetchSliders={fetchSliders} />
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            {sliders.map((slider, index) => (
+              <div key={index} className="relative">
+                <div className="bg-gray-100 rounded-md overflow-hidden shadow-md">
+                  <Image 
+                    src={slider.images[0].secure_url}
+                    alt={`Slider ${index}`} 
+                    height={500} 
+                    priority
+                    width={700}
+                    onClick={() => openImagePreview(slider.images[0].secure_url)}
+                    className="w-full h-48 object-cover hover:cursor-pointer hover:scale-105"
+                  />
+                  <div className="p-4">
+                    <h2 className="text-2xl font-bold mb-2">{slider.title}</h2>
+                    <p className="text-gray-600">{slider.description}</p>
+                  </div>
                 </div>
+                <DeleteSlider 
+                  eventId={slider._id} 
+                  eventTitle={slider.title} 
+                  eventImageUrl={slider.images[0].secure_url} 
+                />
               </div>
-              <DeleteSlider eventId={slider._id} eventTitle={slider.title} eventImageUrl={slider.images[0].secure_url} />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {selectedImage && (
-        <ImagePreviewModal imageUrl={selectedImage} onClose={closeImagePreview} />
-      )}
+        {selectedImage && (
+          <ImagePreviewModal imageUrl={selectedImage} onClose={closeImagePreview} />
+        )}
       </div>
     </Layout>
   );
 }
 
 export default SliderPage;
-
-
-           

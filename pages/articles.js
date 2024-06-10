@@ -4,6 +4,7 @@ import axios from 'axios';
 import ArticleForm from '@/components/AddForms/ArticleForm';
 import DeleteArticles from '@/components/DeleteModals/DeleteArticles';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -74,10 +75,27 @@ const Articles = () => {
                 <div key={index} className={`bg-gray-300 shadow-black shadow-md rounded-md p-2 ${isExpanded ? 'lg:col-span-3' : 'lg:col-span-1'}`}>
                   <h3 className="text-lg font-semibold mb-2 text-center">{article.title}</h3>
                   <div className="image-container">
-                    {article.images.map((image, imageIndex) => (
-                      <img key={imageIndex} src={image.secure_url} alt={`Event ${index} Image ${imageIndex}`} style={{ width: '100%', height: isExpanded ? 'auto' : '100px', objectFit: 'cover', marginBottom: '4px' }} />
-                    ))}
-                  </div>
+      {article.images.map((image, imageIndex) => (
+        <div
+          key={imageIndex}
+          style={{
+            width: '100%',
+            height: isExpanded ? 'auto' : '100px',
+            marginBottom: '4px',
+            position: 'relative',
+          }}
+        >
+          <Image
+            src={image.secure_url}
+            alt={`Event ${imageIndex} Image`}
+            fill
+            sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" // Adjust sizes as needed
+            style={{ objectFit: 'cover' }} // Directly use style prop for objectFit
+            priority={imageIndex === 0} // Optional: Add priority to the first image if it's above the fold
+          />
+        </div>
+      ))}
+    </div>
                   {isExpanded ? (
                     <div dangerouslySetInnerHTML={{ __html: articleHTML }} />
                   ) : (

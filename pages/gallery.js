@@ -5,6 +5,7 @@ import axios from 'axios';
 import ImagePreviewModal from '@/components/ImagePreviewModal';
 import DeleteImages from '@/components/DeleteModals/DeleteImages';
 import ImageForm from '@/components/AddForms/ImageForm';
+import Image from 'next/image';
 
 export default function PhotoGallery() {
   const [images, setImages] = useState([]);
@@ -52,12 +53,13 @@ export default function PhotoGallery() {
         <div className="mt-4 grid grid-flow-row grid-cols-10 gap-2 overflow-scroll" style={{ height: '525px' }}>
         {images.map((image, index) => (
   <div key={index} className="flex flex-col items-center">
-    <img
+    <Image
       src={image.secure_url} // Assuming `secure_url` is the property that holds the image URL
       alt={`Image ${index}`}
       onClick={() => openImagePreview(image.secure_url)}
       className='h-40 w-56 cursor-pointer'
       width={100} height={100}
+      priority
     />
     <div className='w-full'>
       <DeleteImages image={image} onDelete={handleDelete} /> 

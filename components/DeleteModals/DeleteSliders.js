@@ -66,9 +66,10 @@ export default function DeleteSlider({ eventId, eventTitle }) {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-gray-200 rounded shadow-md p-4 w-full md:w-96">
             <div className="flex justify-between">
-              <h5 className="text-lg font-semibold">
-                Do you really want to delete&nbsp;"{eventTitle}"?
-              </h5>
+            <h5 className="text-lg font-semibold">
+  Do you really want to delete&nbsp;&quot;{eventTitle}&quot;?
+</h5>
+
               <button
                 onClick={closeModal}
                 className="text-gray-500 hover:text-gray-700"

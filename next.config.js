@@ -2,7 +2,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com'], // Add your Cloudinary hostname here
+    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com'], // Add your Cloudinary hostname here
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

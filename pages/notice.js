@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import DeleteNotices from '../components/DeleteModals/DeleteNotices';
 import NoticeForm from '../components/AddForms/noticeForm';
+import Image from 'next/image';
 
 const NoticePage = () => {
   const [notices, setNotices] = useState([]);
@@ -49,7 +50,7 @@ const NoticePage = () => {
                 <h4 className='bg-lime-500 text-center'>{notice.title}</h4>
                 {notice.images.map((image, imageIndex) => (
                   <div key={imageIndex}>
-                    <img 
+                    <Image height={200} width={800} 
                       src={image.secure_url} 
                       alt={`Notice ${noticeIndex} Image ${imageIndex}`} 
                     />

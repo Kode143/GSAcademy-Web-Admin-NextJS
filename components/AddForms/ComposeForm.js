@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { UploadIcon } from "../Icons";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Image from "next/image";
 
 const ComposeForm = () => {
   const formRef = useRef();
@@ -170,14 +171,14 @@ const ComposeForm = () => {
             </div>
             <div className="flex gap-12">
               <div className="flex flex-col">
-                <label htmlFor="receiverName" className="block mb-2">Receiver's Name</label>
+                <label htmlFor="receiverName" className="block mb-2">Receiver Name</label>
                 <input type="text" id="receiverName" name="receiverName" placeholder="First or Full Name" className="w-72 mb-4 p-2 border rounded-lg"
                  value={receiverName}
         onChange={handleReceiverNameChange}
         required />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="email" className="block mb-2">Receiver's Email Address</label>
+                <label htmlFor="email" className="block mb-2">Receiver Email Address</label>
                 <input type="email" id="email" name="email" placeholder="Email Address" className={`w-72 mb-4 p-2 border rounded-lg ${emailError ? 'border-red-500' : ''}`} required />
                 {emailError && <p className="text-red-500 text-sm">Please enter a valid email address.</p>}
               </div>
@@ -201,7 +202,7 @@ const ComposeForm = () => {
     <div key={index} className="flex items-center">
       {/* Render preview or file name based on file type */}
       {file.contentType.includes('image') ? (
-        <img src={`data:${file.contentType};base64,${file.content}`} alt="Attachment" className="h-20 w-20" />
+        <Image src={`data:${file.contentType};base64,${file.content}`} alt="Attachment" height={100} width={300} className="h-20 w-20" />
       ) : file.contentType.includes('pdf') ? (
         <embed src={`data:application/pdf;base64,${file.content}`} type="application/pdf" className="h-20 w-20" />
       ) : file.contentType.includes('docx') ? (

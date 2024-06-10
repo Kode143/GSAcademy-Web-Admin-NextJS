@@ -15,7 +15,7 @@ export const authOptions = {
     }),
  
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.SECRET,
   adapter: MongoDBAdapter (clientPromise),
   callbacks: {
     session : ({session,token,user}) => {

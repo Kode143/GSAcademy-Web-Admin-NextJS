@@ -15,6 +15,7 @@ const Articles = () => {
   const { id } = router.query;
 
   useEffect(() => {
+    
     axios.get('/api/articles').then(response => {
       const sortedArticles = response.data.sort((a, b) => b._id.localeCompare(a._id));
       setArticles(sortedArticles);

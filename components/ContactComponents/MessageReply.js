@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
+import { BarLoader } from 'react-spinners';
 
 const MessageReply = ({ messageData }) => {
   const [subject, setSubject] = useState('');
   const [replyText, setReplyText] = useState('');
-  const [repliedMessage, setRepliedMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state for BarLoader
+  const router = useRouter();
+
+  useEffect(() => {
+    // Initialize messages with the received message followed by replies
+    setMessages([{ body: messageData.message, received: true }, ...(messageData.replies || [])]);
+  }, [messageData]);
+
+  
 
   const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -17,10 +29,14 @@ const MessageReply = ({ messageData }) => {
 
     const data = {
       to: messageData.email,
-      subject: capitalizeFirstLetter(subject), // Capitalize subject
-      body: capitalizeFirstLetter(replyText), // Capitalize reply text
+      subject: capitalizeFirstLetter(subject),
+      body: capitalizeFirstLetter(replyText),
       firstName: messageData.firstName,
+      lastName: messageData.lastName,
+      contactId: messageData._id, // Add contactId
     };
+
+    setLoading(true); // Start loading
 
     try {
       const response = await fetch('/api/sendEmail', {
@@ -33,7 +49,18 @@ const MessageReply = ({ messageData }) => {
 
       if (response.ok) {
         alert('Email sent successfully!');
-   
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            subject: data.subject,
+            body: data.body,
+            createdAt: new Date(),
+            received: false,
+          },
+        ]);
+        setSubject('');
+        setReplyText('');
+        router.reload();
       } else {
         console.error('Failed to send email:', response.statusText);
         alert('Failed to send email. Please try again.');
@@ -41,15 +68,17 @@ const MessageReply = ({ messageData }) => {
     } catch (error) {
       console.error('Error sending email:', error);
       alert('Error sending email. Please try again.');
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   const handleChange = (e) => {
-    setSubject(capitalizeFirstLetter(e.target.value)); // Capitalize subject as user types
+    setSubject(capitalizeFirstLetter(e.target.value));
   };
 
   const handleChanged = (e) => {
-    setReplyText(capitalizeFirstLetter(e.target.value)); // Capitalize reply text as user types
+    setReplyText(capitalizeFirstLetter(e.target.value));
   };
 
   return (
@@ -59,13 +88,29 @@ const MessageReply = ({ messageData }) => {
           <span className="font-bold">Name:</span> <span>{messageData.firstName}</span> {messageData.lastName}
         </p>
         <div className="flex flex-col mt-3 gap-2 overflow-scroll" style={{ height: '250px' }}>
-          <div className="flex flex-row gap-2">
-            <div className="bg-white p-1 rounded-full max-h-9">
-              {messageData.firstName.charAt(0).toUpperCase()}{messageData.lastName.charAt(0).toUpperCase()}
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${msg.received ? 'flex-row justify-start' : 'flex-row justify-end'} gap-2`}
+            >
+              {msg.received ? (
+                <>
+                  <div className="p-1 rounded-full max-h-9 bg-blue-800 text-white flex items-center justify-center">
+                    <span>
+                      {messageData.firstName.charAt(0).toUpperCase()}
+                      {messageData.lastName.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="bg-white rounded-md p-1">{msg.body}</p>
+                </>
+              ) : (
+                <>
+                  <p className="bg-white rounded-md p-1">{msg.body}</p>
+                  <Image src="/uploads/circle.png" width={32} height={32} alt="Logo" className="h-8 w-8" />
+                </>
+              )}
             </div>
-            <p className="bg-white p-1 me-2">{messageData.message}</p>
-          </div>
-        
+          ))}
         </div>
       </div>
       <div className="flex flex-col">
@@ -82,12 +127,18 @@ const MessageReply = ({ messageData }) => {
           value={replyText}
           onChange={handleChanged}
         />
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-          onClick={handleReply}
-        >
-          Send
-        </button>
+        <div className="flex justify-center mt-2">
+          {!loading ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+              onClick={handleReply}
+            >
+              Send
+            </button>
+          ) : (
+            <BarLoader color="#3b82f6" />
+          )}
+        </div>
       </div>
     </div>
   );

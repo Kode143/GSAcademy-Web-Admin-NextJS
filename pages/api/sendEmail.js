@@ -1,14 +1,25 @@
 import nodemailer from 'nodemailer';
 import { messageTemplate } from '../../lib/messageTemplate'; // Assuming this is the path to your message template
 import moment from 'moment';
-import fs from 'fs';
+import mongoose from 'mongoose';
+import { Contact } from '../../models/contact';
+
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
+  return mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { to, subject, body, firstName, attachments } = req.body; // Extract email data and attachments
+    await connectDB();
 
-    if (!body || !firstName) {
-      return res.status(400).json({ success: false, error: 'Missing body or firstName in request' });
+    const { to, subject, body, firstName, lastName, contactId, attachments } = req.body;
+
+    if (!body || !firstName || !contactId) {
+      return res.status(400).json({ success: false, error: 'Missing body, firstName, or contactId in request' });
     }
 
     const { SMTP_EMAIL, SMTP_PASSWORD } = process.env;
@@ -43,6 +54,24 @@ export default async function handler(req, res) {
 
       const info = await transporter.sendMail(mailOptions);
 
+      // Find the contact and add the reply
+      const contact = await Contact.findById(contactId);
+      if (!contact) {
+        return res.status(404).json({ success: false, error: 'Contact not found' });
+      }
+
+      // Ensure replies array is initialized
+      if (!contact.replies) {
+        contact.replies = [];
+      }
+
+      contact.replies.push({
+        subject,
+        body,
+      });
+
+      await contact.save();
+
       res.status(200).json({ success: true });
     } catch (error) {
       console.error('Error sending email:', error);
@@ -52,6 +81,7 @@ export default async function handler(req, res) {
     res.status(405).end(); // Method Not Allowed
   }
 }
+
 export const config = {
   api: {
     bodyParser: {

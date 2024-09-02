@@ -19,7 +19,7 @@ export default function Home({contactFormData}) {
   <div className="flex flex-col ">
   <div className="flex justify-between">
   <h1>
-  Welcome,<b>{session?.user?.name ? capitalizeWords(session.user.name) : ''}</b>
+  Welcome, <b>{session?.user?.name ? capitalizeWords(session.user.name) : ''}</b>
   </h1>
   <div className="bg-gray-700 flex text-white gap-1 rounded-lg overflow-hidden">
       {session?.user?.image && (

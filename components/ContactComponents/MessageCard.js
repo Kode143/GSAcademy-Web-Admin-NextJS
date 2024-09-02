@@ -18,7 +18,7 @@ const MessageCard = ({ contact, selectedMessageId, handleSelectMessage }) => {
   return (
     <div className={cardClass} onClick={handleClick}>
       <p className="">{contact.firstName} {contact.lastName}</p>
-      <p>{contact.message.slice(0,27)}...</p>
+      <p>{contact.message.slice(0,25)}...</p>
     </div>
   );
 };

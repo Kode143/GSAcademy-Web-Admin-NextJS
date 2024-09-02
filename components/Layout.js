@@ -14,7 +14,7 @@ export default function Layout({children}) {
     <h1 className="font-bold m-5 me-8 pe-5">Welcome to Golden Supervision Academy Admin Panel</h1>
     <h2 className="mb-5 me-5">Use School Gmail ID to login or consult with Administration</h2>
     <div className="flex-grow flex flex-col items-center justify-center">
-      <Image src="/uploads/happy.gif" alt="GIFs" priority height={100} width={300} className="mb-5 h-44 w-full" />
+      <Image src="/uploads/happy.gif" alt="GIFs"  unoptimized  priority height={100} width={300} className="mb-5 h-44 w-full" />
       <button onClick={() => signIn('google')}
       className="bg-green-600 bg-opacity-90 p-2 px-4 rounded-xl
        hover:bg-red-600 hover:bg-opacity-90">Login with Google</button>

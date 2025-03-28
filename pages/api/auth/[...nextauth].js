@@ -6,6 +6,7 @@ import {getServerSession} from "next-auth";
 
 
 const adminEmails= ['sthabhuwan168@gmail.com'];
+console.log("NEXTAUTH_URL from next.config.mjs:", process.env.NEXTAUTH_URL);
 export const authOptions = {
   providers: [
 
